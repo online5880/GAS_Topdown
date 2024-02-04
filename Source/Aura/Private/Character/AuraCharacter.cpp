@@ -1,7 +1,7 @@
 // Copyright mane
 #include "Character/AuraCharacter.h"
-
 #include "GameFramework/CharacterMovementComponent.h"
+#include UE_INLINE_GENERATED_CPP_BY_NAME(AuraCharacter)
 
 AAuraCharacter::AAuraCharacter()
 {
