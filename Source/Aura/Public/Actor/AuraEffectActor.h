@@ -30,5 +30,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Mesh")
 	TObjectPtr<UStaticMeshComponent> Mesh;
-
 };

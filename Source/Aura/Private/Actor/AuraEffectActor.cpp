@@ -12,7 +12,6 @@
 
 AAuraEffectActor::AAuraEffectActor()
 {
- 	
 	PrimaryActorTick.bCanEverTick = false;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
