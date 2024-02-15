@@ -2,9 +2,9 @@
 
 #include "Actor/AuraEffectActor.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
-#include "AbilitySystem/AuraAttributeSet.h"
 #include "Components/SphereComponent.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(AuraEffectActor)
@@ -14,40 +14,32 @@ AAuraEffectActor::AAuraEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	SetRootComponent(Mesh);
-
-	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
-	Sphere->SetupAttachment(GetRootComponent());
-	
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnOverlap);
-	Sphere->OnComponentEndOverlap.AddDynamic(this, &ThisClass::EndOverlap);
-}
-
-void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	// TODO: Change this to apply a Gameplay Effect. For now, using const_cast as hack!
-	if(const IAbilitySystemInterface* AbilitySystemInterface = Cast<IAbilitySystemInterface>(OtherActor))
-	{
-		const UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AbilitySystemInterface->GetAbilitySystemComponent()->GetAttributeSet(UAuraAttributeSet::StaticClass()));
-		
-		UAuraAttributeSet* MutableAuraAttributeSet = const_cast<UAuraAttributeSet*>(AuraAttributeSet);
-		MutableAuraAttributeSet->SetHealth(AuraAttributeSet->GetHealth() + 25.f);
-		MutableAuraAttributeSet->SetMana(AuraAttributeSet->GetMana() - 25.f);
-		Destroy();
-	}
-}
-
-void AAuraEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot")); 
 }
 
 void AAuraEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AAuraEffectActor::ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffectClass)
+{
+	UAbilitySystemComponent* TargetASC =  UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
+	if(TargetASC == nullptr) return;
+
+	check(GameplayEffectClass);
+	
+	// 이펙트 컨텍스트 핸들을 만든다. (Wrapper)
+	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
+		
+	// 소스 오브젝트를 추가한다.
+	EffectContextHandle.AddSourceObject(this);
+
+	// 이펙트 스펙 핸들을 만든다. (Wrapper)
+	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f,EffectContextHandle);
+
+	// 타겟에게 이펙트를 적용한다.
+	TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }
 
