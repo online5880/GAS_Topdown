@@ -1,3 +1,6 @@
 // Copyright mane
+
+
 #include "Interaction/EnemyInterface.h"
-#include UE_INLINE_GENERATED_CPP_BY_NAME(EnemyInterface)
+
+// Add default functionality here for any IEnemyInterface functions that are not pure virtual.

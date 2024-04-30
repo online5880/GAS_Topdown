@@ -1,6 +1,6 @@
 // Copyright mane
-
 #pragma once
+
 
 #include "AbilitySystemComponent.h"
 #include "AuraAbilitySystemComponent.generated.h"
@@ -19,7 +19,6 @@ public:
 
 	FEffectAssetTags EffectAssetTags;
 protected:
-	
+
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
-	
 };

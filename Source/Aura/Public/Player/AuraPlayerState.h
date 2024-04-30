@@ -23,7 +23,7 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 protected:
 	
-	UPROPERTY(VIsibleAnywhere, BlueprintReadOnly, Category = "AuraPlayerState")
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY()

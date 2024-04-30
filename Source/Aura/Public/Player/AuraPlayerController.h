@@ -5,10 +5,12 @@
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
-class IEnemyInterface;
-struct FInputActionValue;
-class UInputAction;
+
 class UInputMappingContext;
+class UInputAction;
+struct FInputActionValue;
+class IEnemyInterface;
+
 /**
  * 
  */
@@ -22,19 +24,16 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
-
 private:
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
 
 	void Move(const FInputActionValue& InputActionValue);
 
 	void CursorTrace();
-	UPROPERTY()
 	TObjectPtr<IEnemyInterface> LastActor;
-	UPROPERTY()
 	TObjectPtr<IEnemyInterface> ThisActor;
 };
